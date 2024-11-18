@@ -1,3 +1,4 @@
+import Transcription from "./components/transcription_display";
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
@@ -40,8 +41,22 @@ function App() {
       ) : (
         <p>Loading video...</p>
       )}
+        <Transcription/>
+
     </div>
   );
 }
 
 export default App;
+
+
+
+// function App() {
+
+//   return (
+//     <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+//     </div>
+//   );
+// }
+
+// export default App;
