@@ -78,34 +78,34 @@ function Transcription() {
 
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h1>Conversation Transcription</h1>
+      {/* <h1>Conversation Transcription</h1> */}
       
-      <div style={{ marginBottom: '20px' }}>
-        <h2>User Input</h2>
-        <div 
+      {/* <div style={{ marginBottom: '20px' }}> */}
+        {/* <h2>User Input:</h2> */}
+        {/* <div 
           style={{ 
             border: '1px solid #ccc', 
             padding: '10px', 
             minHeight: '50px', 
             backgroundColor: '#f9f9f9' 
           }}
-        >
-          {inputTranscript}
-        </div>
-      </div>
+        > */}
+          {/* {inputTranscript} */}
+        {/* </div> */}
+      {/* </div> */}
 
       <div>
-        <h2>AI Output</h2>
-        <div 
+        <h2>AI Output:</h2>
+        {/* <div 
           style={{ 
             border: '1px solid #ccc', 
             padding: '10px', 
             minHeight: '50px', 
             backgroundColor: '#f9f9f9' 
           }}
-        >
+        > */}
           {aiOutputTranscript}
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );

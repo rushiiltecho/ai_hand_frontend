@@ -6,7 +6,7 @@ interface VideoFrameData {
   data: string; // Assuming data is a string (base64 encoded image)
 }
 
-function App() {
+export function FramesToBrowser() {
   const [videoFrame, setVideoFrame] = useState<string | null>(null); // Specify the type for state
 
   useEffect(() => {
@@ -26,22 +26,29 @@ function App() {
 
   return (
     <div>
-      <h1>Live Video Stream</h1>
       {videoFrame ? (
         <img
           src={videoFrame}
           alt="Live Video"
           style={{
-            width: '640px',  // Adjust width and height as needed
-            height: '480px',
+            width: '960px',  // Adjust width and height as needed
+            height: '720px',
             objectFit: 'cover',
           }}
         />
       ) : (
-        <p>Loading video...</p>
+        <div
+          style={{
+            width: '960px',
+            height: '720px',
+            // backgroundColor: 'white',  // White background as a placeholder
+            objectFit:'cover'
+          }}
+          className='rounded-xl backdrop-blur-sm bg-white/55 '
+        />
       )}
     </div>
   );
 }
 
-export default App;
+export default FramesToBrowser;
