@@ -1,7 +1,7 @@
 import Transcription from "./components/transcription_display";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { DynamicVoiceLine } from "./components/dynamic_voice_lines";
-import FramesToBrowser from "./components/frames_to_browser";
+import {FramesToBrowser} from "./components/frames_to_browser";
 import io from "socket.io-client";
 
 
@@ -14,6 +14,7 @@ export function App() {
   const [tempUserMessage, setTempUserMessage] = useState(''); // Temporary user message
   const [tempAiMessage, setTempAiMessage] = useState(''); // Temporary AI message
   const [audioData, setAudioData] = useState(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const socket = io('http://localhost:5000');
@@ -61,6 +62,20 @@ export function App() {
     //   modeTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
     // });
 
+      // Listen for the 'video_frame' event
+      socket.on('video_frame', (data) => {
+        // Create a Blob from the binary data
+        const blob = new Blob([data], { type: 'image/jpeg' });
+  
+        // Create a URL for the Blob and set it  as the source of an <img> element
+        const url = URL.createObjectURL(blob);
+  
+        if (videoRef.current) {
+          videoRef.current.src = url;
+        }
+        console.log("videoRef",videoRef)
+      });
+
     socket.on('speaker_mode', (data) => {
       setMode(data.response_from);
       // clearTimeout(modeTimeout);
@@ -81,7 +96,7 @@ export function App() {
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
         <div>
           <DynamicVoiceLine activeMode={mode}/>
-          <FramesToBrowser mode={mode}/>
+          <FramesToBrowser mode={mode} videoRef={videoRef}/>
         </div>
         <div>
           <div className="p-8">
