@@ -11,6 +11,7 @@ export function App() {
   const [aiOutputTranscript, setAiOutputTranscript] = useState('');
   const [videoFrame, setVideoFrame] = useState('');
   const [mode, setMode] = useState('');
+  const [activeMode, setActiveMode] = useState(false)
   
   useEffect(() => {
     const socket = io('http://localhost:5000');
@@ -41,7 +42,10 @@ export function App() {
 
     // Listen for mode updates
     socket.on('speaker_mode', (data) => {
-      setMode(data.response_from);})
+      setMode(data.response_from);
+      setActiveMode(data.response_from === "AI")
+      
+    })
 
     return () => {
       socket.disconnect();
@@ -51,7 +55,9 @@ export function App() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
-      {/* Loading Component */}
+      {/* Loading Component */
+        console.log(activeMode)
+      }
         <div>
           <FramesToBrowser videoFrame={videoFrame} mode={mode}/>
         </div>
@@ -60,6 +66,7 @@ export function App() {
             <Transcription 
               inputTranscript={inputTranscript}
               aiOutputTranscript={aiOutputTranscript}
+              activeMode={activeMode}
             />
           </div>
         </div>
