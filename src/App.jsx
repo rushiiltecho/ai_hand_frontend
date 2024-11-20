@@ -11,18 +11,45 @@ export function App() {
   const [aiOutputTranscript, setAiOutputTranscript] = useState('');
   const [videoFrame, setVideoFrame] = useState('');
   const [mode, setMode] = useState('');
-  const [audioData, setAudioData] = useState(null)
+  const [chatHistory, setChatHistory] = useState([]); // Stores finalized messages
+  const [tempUserMessage, setTempUserMessage] = useState(''); // Temporary user message
+  const [tempAiMessage, setTempAiMessage] = useState(''); // Temporary AI message
+  const [audioData, setAudioData] = useState(null);
   
   useEffect(() => {
     const socket = io('http://localhost:5000');
     let modeTimeout;
+    let userTypingTimeout;
+    let aiTypingTimeout;
 
     socket.on('input_transcript', (data) => {
       setInputTranscript(data.text);
+      setTempUserMessage(data.text);
+
+      // Clear existing timeout and set a new one to detect when the user is done speaking
+      clearTimeout(userTypingTimeout);
+      userTypingTimeout = setTimeout(() => {
+        setChatHistory(prevHistory => [
+          ...prevHistory,
+          { sender: 'user', text: data.text.trim() }
+        ]);
+        setTempUserMessage(''); // Clear temporary state
+      }, 500); // Adjust timeout for user input finalization
     });
 
     socket.on('ai_output_transcript', (data) => {
       setAiOutputTranscript(data.text);
+      setTempAiMessage(data.text);
+
+      // Clear existing timeout and set a new one to detect when AI is done responding
+      clearTimeout(aiTypingTimeout);
+      aiTypingTimeout = setTimeout(() => {
+        setChatHistory(prevHistory => [
+          ...prevHistory,
+          { sender: 'ai', text: data.text.trim() }
+        ]);
+        setTempAiMessage(''); // Clear temporary state
+      }, 500); // Adjust timeout for AI response finalization
     });
 
     socket.on('audio_output_data', (audio) => {
@@ -39,20 +66,19 @@ export function App() {
       modeTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
     });
 
-    // Handle speaker mode updates for color
     socket.on('speaker_mode', (data) => {
       setMode(data.response_from);
-
-      // Reset the timeout each time we receive a `speaker_mode`
       clearTimeout(modeTimeout);
       modeTimeout = setTimeout(() => {
         setMode("");
-      }, 1000); // Set mode to "loading" if no update within 2 seconds
+      }, 1000);
     });
 
     return () => {
       socket.disconnect();
       clearTimeout(modeTimeout);
+      clearTimeout(userTypingTimeout);
+      clearTimeout(aiTypingTimeout);
     };
   }, []);
 
