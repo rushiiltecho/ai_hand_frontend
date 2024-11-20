@@ -5,41 +5,7 @@ interface VideoFrameData {
   data: string; // Assuming data is a string (base64 encoded image)
 }
 
-export function FramesToBrowser() {
-  const [videoFrame, setVideoFrame] = useState<string | null>(null);
-  const [mode, setMode] = useState<string | null>(null);
-  
-  useEffect(() => {
-    const socket = io('http://localhost:5000');
-    let frameTimeout //: NodeJS.Timeout;
-
-    // Function to clear frame and reset if no frame received
-    const resetFrame = () => {
-      setVideoFrame(null);
-    };
-
-    // Listen for video frame updates
-    socket.on('video_frame', (data: VideoFrameData) => {
-      setVideoFrame(`data:image/jpeg;base64,${data.data}`);
-      
-      // Clear the previous timeout and set a new one (e.g., 1 second)
-      clearTimeout(frameTimeout);
-      frameTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
-    });
-
-    // Listen for mode updates
-    socket.on('speaker_mode', (data) => {
-      setMode(data.response_from);
-    });
-
-    // Cleanup function to clear listeners and timers
-    return () => {
-      clearTimeout(frameTimeout);
-      socket.off('video_frame');
-      socket.off('speaker_mode');
-      socket.disconnect();
-    };
-  }, []);
+export function FramesToBrowser( {videoFrame , mode}: {videoFrame: string | null , mode: string | null}) {
 
   const gradientClasses =
     mode === 'user'
