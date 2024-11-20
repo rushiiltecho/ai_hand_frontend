@@ -1,30 +1,38 @@
 import React, { useEffect, useRef } from 'react';
 import io , { Socket } from 'socket.io-client';
+
 interface VideoFrameData {
   data: string; // Assuming data is a string (base64 encoded image)
 }
+
 export const FramesToBrowser = ({mode, videoRef}:{mode:string | null, videoRef: any}) => {
   // const videoRef = useRef<HTMLImageElement>(null);
+
   // useEffect(() => {
   //   // Initialize the Socket.IO client
   //   const socket: Socket = io('http://localhost:5000', {
   //     transports: ['websocket'],
   //   });
+
   //   // Listen for the 'video_frame' event
   //   socket.on('video_frame', (data: ArrayBuffer) => {
   //     // Create a Blob from the binary data
   //     const blob = new Blob([data], { type: 'image/jpeg' });
+
   //     // Create a URL for the Blob and set it  as the source of an <img> element
   //     const url = URL.createObjectURL(blob);
+
   //     if (videoRef.current) {
   //       videoRef.current.src = url;
   //     }
   //   });
+
   //   // Cleanup the socket connection on component unmount
   //   return () => {
   //     socket.disconnect();
   //   };
   // }, []);
+
   const gradientClasses =
     mode === 'user'
       ? 'from-blue-500 to-green-500'
@@ -32,6 +40,7 @@ export const FramesToBrowser = ({mode, videoRef}:{mode:string | null, videoRef: 
       ? 'from-purple-500 to-pink-500'
       : '';
   console.log(videoRef)
+
   return (
     <div>
       <div className="relative group cursor-pointer">
@@ -70,4 +79,5 @@ export const FramesToBrowser = ({mode, videoRef}:{mode:string | null, videoRef: 
     </div>
   );
 }
+
 // export default FramesToBrowser;
