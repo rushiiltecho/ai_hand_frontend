@@ -9,7 +9,6 @@ export function App() {
 
   const [inputTranscript, setInputTranscript] = useState('');
   const [aiOutputTranscript, setAiOutputTranscript] = useState('');
-  const [videoFrame, setVideoFrame] = useState('');
   const [mode, setMode] = useState('');
   const [chatHistory, setChatHistory] = useState([]); // Stores finalized messages
   const [tempUserMessage, setTempUserMessage] = useState(''); // Temporary user message
@@ -56,22 +55,18 @@ export function App() {
       setAudioData(audio);
     });
 
-    const resetFrame = () => {
-      setVideoFrame(null);
-    };
-
-    socket.on('video_frame', (data) => {
-      setVideoFrame(`data:image/jpeg;base64,${data.data}`);
-      clearTimeout(modeTimeout);
-      modeTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
-    });
+    // socket.on('video_frame', (data) => {
+    //   setVideoFrame(`data:image/jpeg;base64,${data.data}`);
+    //   clearTimeout(modeTimeout);
+    //   modeTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
+    // });
 
     socket.on('speaker_mode', (data) => {
       setMode(data.response_from);
-      clearTimeout(modeTimeout);
-      modeTimeout = setTimeout(() => {
-        setMode("");
-      }, 1000);
+      // clearTimeout(modeTimeout);
+      // modeTimeout = setTimeout(() => {
+      //   setMode("");
+      // }, 1000);
     });
 
     return () => {
@@ -86,7 +81,7 @@ export function App() {
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
         <div>
           <DynamicVoiceLine activeMode={mode}/>
-          <FramesToBrowser videoFrame={videoFrame} mode={mode}/>
+          <FramesToBrowser mode={mode}/>
         </div>
         <div>
           <div className="p-8">
