@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply bg-[#0B1311];
+    /* @apply bg-[#0B1311]; */
     margin: 0; /* Optional: Remove default margin */
     color: white; /* Optional: Set text color for better contrast */
     font-family: Arial, sans-serif; /* Optional: Set a default font */

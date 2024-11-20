@@ -31,7 +31,7 @@ export const DynamicVoiceLine = ({ activeMode = "user" }) => {
 
         for (let x = 0; x < canvas.width; x++) {
           const normalizedX = x / canvas.width;
-          const baseAmplitude = activeMode ? amplitude * 0.7 : amplitude * 0.4;
+          const baseAmplitude = activeMode ? amplitude * 1 : amplitude * 0.4;
 
           const y =
             centerY +
@@ -58,7 +58,7 @@ export const DynamicVoiceLine = ({ activeMode = "user" }) => {
         ctx.stroke();
         ctx.restore();
       };
-      console.log(activeMode)
+      // console.log(activeMode)
       // Define layer configurations based on activeMode
       const layers =
         activeMode === 'user'

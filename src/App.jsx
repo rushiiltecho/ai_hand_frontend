@@ -11,10 +11,11 @@ export function App() {
   const [aiOutputTranscript, setAiOutputTranscript] = useState('');
   const [videoFrame, setVideoFrame] = useState('');
   const [mode, setMode] = useState('');
-  const [activeMode, setActiveMode] = useState(false)
+  const [audioData, setAudioData] = useState(null)
   
   useEffect(() => {
     const socket = io('http://localhost:5000');
+    let modeTimeout;
 
     socket.on('input_transcript', (data) => {
       setInputTranscript(data.text);
@@ -24,37 +25,42 @@ export function App() {
       setAiOutputTranscript(data.text);
     });
 
-    let frameTimeout //: NodeJS.Timeout;
+    socket.on('audio_output_data', (audio) => {
+      setAudioData(audio);
+    });
 
-    // Function to clear frame and reset if no frame received
     const resetFrame = () => {
       setVideoFrame(null);
     };
 
-    // Listen for video frame updates
     socket.on('video_frame', (data) => {
       setVideoFrame(`data:image/jpeg;base64,${data.data}`);
-      
-      // Clear the previous timeout and set a new one (e.g., 1 second)
-      clearTimeout(frameTimeout);
-      frameTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
+      clearTimeout(modeTimeout);
+      modeTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
     });
 
-    // Listen for mode updates
+    // Handle speaker mode updates
     socket.on('speaker_mode', (data) => {
-      setMode(data.response_from);      
-    })
+      setMode(data.response_from);
+
+      // Reset the timeout each time we receive a `speaker_mode`
+      clearTimeout(modeTimeout);
+      modeTimeout = setTimeout(() => {
+        setMode("");
+      }, 1000); // Set mode to "loading" if no update within 2 seconds
+    });
 
     return () => {
       socket.disconnect();
+      clearTimeout(modeTimeout);
     };
   }, []);
-
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
       {/* Loading Component */
-        console.log(mode)
+        // console.log("AUDIO_DATA:",audioData)
+        // console.log(mode)
       }
         <div>
           <FramesToBrowser videoFrame={videoFrame} mode={mode}/>
