@@ -39,7 +39,7 @@ export function App() {
       modeTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
     });
 
-    // Handle speaker mode updates
+    // Handle speaker mode updates for color
     socket.on('speaker_mode', (data) => {
       setMode(data.response_from);
 
