@@ -15,7 +15,7 @@ export function App() {
   const [tempUserMessage, setTempUserMessage] = useState(''); // Temporary user message
   const [tempAiMessage, setTempAiMessage] = useState(''); // Temporary AI message
   const [audioData, setAudioData] = useState(null);
-  
+
   useEffect(() => {
     const socket = io('http://localhost:5000');
     let modeTimeout;
@@ -84,11 +84,8 @@ export function App() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
-      {/* Loading Component */
-        // console.log("AUDIO_DATA:",audioData)
-        // console.log(mode)
-      }
         <div>
+          <DynamicVoiceLine activeMode={mode}/>
           <FramesToBrowser videoFrame={videoFrame} mode={mode}/>
         </div>
         <div>
