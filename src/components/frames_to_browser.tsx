@@ -1,11 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import React, { useEffect, useRef } from 'react';
+import io , { Socket } from 'socket.io-client';
 
 interface VideoFrameData {
   data: string; // Assuming data is a string (base64 encoded image)
 }
 
-export function FramesToBrowser( { mode}: { mode: string | null}) {
+export const FramesToBrowser = ({mode, videoRef}:{mode:string | null, videoRef: any}) => {
+  // const videoRef = useRef<HTMLImageElement>(null);
+
+  // useEffect(() => {
+  //   // Initialize the Socket.IO client
+  //   const socket: Socket = io('http://localhost:5000', {
+  //     transports: ['websocket'],
+  //   });
+
+  //   // Listen for the 'video_frame' event
+  //   socket.on('video_frame', (data: ArrayBuffer) => {
+  //     // Create a Blob from the binary data
+  //     const blob = new Blob([data], { type: 'image/jpeg' });
+
+  //     // Create a URL for the Blob and set it  as the source of an <img> element
+  //     const url = URL.createObjectURL(blob);
+
+  //     if (videoRef.current) {
+  //       videoRef.current.src = url;
+  //     }
+  //   });
+
+  //   // Cleanup the socket connection on component unmount
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   const gradientClasses =
     mode === 'user'
@@ -13,25 +39,7 @@ export function FramesToBrowser( { mode}: { mode: string | null}) {
       : mode === 'AI'
       ? 'from-purple-500 to-pink-500'
       : '';
-
-    const [videoFrame, setVideoFrame] = useState<string | null>('');
-
-    useEffect(() => {
-      const socket = io('http://localhost:5000');
-      let modeTimeout;
-
-      const resetFrame = () => {
-        setVideoFrame(null);
-      };
-
-      socket.on('video_frame', (data) => {
-        setVideoFrame(`data:image/jpeg;base64,${data.data}`);
-        clearTimeout(modeTimeout);
-        modeTimeout = setTimeout(resetFrame, 1000); // Adjust timeout duration as needed
-      });
-  
-    }, [])
-
+  console.log(videoRef)
 
   return (
     <div>
@@ -42,9 +50,9 @@ export function FramesToBrowser( { mode}: { mode: string | null}) {
         ></div>
         <div className="relative px-4 py-4 bg-[#111827]/60 ring-1 ring-gray-900/5 rounded-[2.9rem] leading-none flex items-top justify-start space-x-6">
           <div className="space-y-2">
-            {videoFrame ? (
+            {videoRef ? (
               <img
-                src={videoFrame}
+                ref={videoRef}
                 alt="Live Video"
                 style={{
                   width: '800px',
@@ -73,4 +81,4 @@ export function FramesToBrowser( { mode}: { mode: string | null}) {
   );
 }
 
-export default FramesToBrowser;
+// export default FramesToBrowser;
