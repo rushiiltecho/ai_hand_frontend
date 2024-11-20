@@ -42,9 +42,7 @@ export function App() {
 
     // Listen for mode updates
     socket.on('speaker_mode', (data) => {
-      setMode(data.response_from);
-      setActiveMode(data.response_from === "AI")
-      
+      setMode(data.response_from);      
     })
 
     return () => {
@@ -56,7 +54,7 @@ export function App() {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
       {/* Loading Component */
-        console.log(activeMode)
+        console.log(mode)
       }
         <div>
           <FramesToBrowser videoFrame={videoFrame} mode={mode}/>
@@ -66,7 +64,7 @@ export function App() {
             <Transcription 
               inputTranscript={inputTranscript}
               aiOutputTranscript={aiOutputTranscript}
-              activeMode={activeMode}
+              activeMode={mode}
             />
           </div>
         </div>
